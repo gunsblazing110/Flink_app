@@ -21,25 +21,13 @@ class DefaultFirebaseOptions {
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for android - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return android;
       case TargetPlatform.iOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for ios - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return ios;
       case TargetPlatform.macOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for macos - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return macos;
       case TargetPlatform.windows:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for windows - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return windows;
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
@@ -53,11 +41,49 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyBDW166EjU4rIHJRzCHg4v7TQjMnl-5Ccc',
-    appId: '1:606963412513:web:118eff7b607a96a23b3d60',
-    messagingSenderId: '606963412513',
-    projectId: 'supply-inventory-1e5e2',
-    authDomain: 'supply-inventory-1e5e2.firebaseapp.com',
-    storageBucket: 'supply-inventory-1e5e2.firebasestorage.app',
+    apiKey: 'AIzaSyBwWCU21d33tZYZIiykb78pvzL-KpJM6-0',
+    appId: '1:68490657747:web:9c5f8c5918a15d859b7926',
+    messagingSenderId: '68490657747',
+    projectId: 'inventoryapp-95c1a',
+    authDomain: 'inventoryapp-95c1a.firebaseapp.com',
+    storageBucket: 'inventoryapp-95c1a.firebasestorage.app',
+    measurementId: 'G-94M90HLC7S',
   );
+
+  static const FirebaseOptions macos = FirebaseOptions(
+    apiKey: 'AIzaSyAxnWkdd9brnbBX-KWg4n4QGex_c_EiVM8',
+    appId: '1:68490657747:ios:c255cc30c6f628e89b7926',
+    messagingSenderId: '68490657747',
+    projectId: 'inventoryapp-95c1a',
+    storageBucket: 'inventoryapp-95c1a.firebasestorage.app',
+    iosBundleId: 'com.example.myApp',
+  );
+
+  static const FirebaseOptions ios = FirebaseOptions(
+    apiKey: 'AIzaSyAxnWkdd9brnbBX-KWg4n4QGex_c_EiVM8',
+    appId: '1:68490657747:ios:c255cc30c6f628e89b7926',
+    messagingSenderId: '68490657747',
+    projectId: 'inventoryapp-95c1a',
+    storageBucket: 'inventoryapp-95c1a.firebasestorage.app',
+    iosBundleId: 'com.example.myApp',
+  );
+
+  static const FirebaseOptions android = FirebaseOptions(
+    apiKey: 'AIzaSyCUaSoaehO2aKLb2g3Spqf8c_V5VbhdwyY',
+    appId: '1:68490657747:android:d72869fbf8cec01a9b7926',
+    messagingSenderId: '68490657747',
+    projectId: 'inventoryapp-95c1a',
+    storageBucket: 'inventoryapp-95c1a.firebasestorage.app',
+  );
+
+  static const FirebaseOptions windows = FirebaseOptions(
+    apiKey: 'AIzaSyBwWCU21d33tZYZIiykb78pvzL-KpJM6-0',
+    appId: '1:68490657747:web:84a3fc1f15681ef79b7926',
+    messagingSenderId: '68490657747',
+    projectId: 'inventoryapp-95c1a',
+    authDomain: 'inventoryapp-95c1a.firebaseapp.com',
+    storageBucket: 'inventoryapp-95c1a.firebasestorage.app',
+    measurementId: 'G-XN31PB8FG6',
+  );
+
 }
