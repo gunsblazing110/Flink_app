@@ -4,44 +4,34 @@ import 'recipe_detail_screen.dart';
 import 'recipes_data.dart';
 
 class FlinkCooksScreen extends StatelessWidget {
-  const FlinkCooksScreen({super.key});
-
+  final VoidCallback? onCartUpdated;
+  const FlinkCooksScreen({super.key, this.onCartUpdated});
+  
   @override
   Widget build(BuildContext context) {
     final recipes = RecipesData.all;
 
     return Scaffold(
-      backgroundColor: FlinkColors.lightGrey,
+      backgroundColor: FlinkColors.white,
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildHeader(),
             Expanded(
-              child: ListView.builder(
-                padding: const EdgeInsets.all(16),
-                itemCount: (recipes.length / 2).ceil(),
-                itemBuilder: (context, rowIndex) {
-                  final left = rowIndex * 2;
-                  final right = left + 1;
-                  return Padding(
-                    padding: const EdgeInsets.only(bottom: 12),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: _buildRecipeCard(
-                              context, recipes[left]),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: right < recipes.length
-                              ? _buildRecipeCard(
-                                  context, recipes[right])
-                              : const SizedBox(),
-                        ),
-                      ],
-                    ),
-                  );
+              child: GridView.builder(
+                padding: const EdgeInsets.all(12),
+                gridDelegate:
+                    const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 4,
+                  crossAxisSpacing: 8,
+                  mainAxisSpacing: 8,
+                  childAspectRatio: 0.80,
+                ),
+                itemCount: recipes.length,
+                itemBuilder: (context, index) {
+                  return _buildRecipeCard(
+                      context, recipes[index]);
                 },
               ),
             ),
@@ -54,60 +44,64 @@ class FlinkCooksScreen extends StatelessWidget {
   Widget _buildHeader() {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.fromLTRB(16, 20, 16, 20),
+      padding: const EdgeInsets.fromLTRB(16, 14, 16, 14),
       decoration: BoxDecoration(
         color: FlinkColors.white,
         border: Border(
-          bottom: BorderSide(color: FlinkColors.midGrey, width: 0.8),
+          bottom: BorderSide(
+              color: FlinkColors.midGrey, width: 0.8),
         ),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Row(
         children: [
-          Row(
-            children: [
-              const Text(
-                'Flink Cooks',
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.w900,
-                  color: FlinkColors.black,
-                  letterSpacing: -0.5,
-                ),
-              ),
-              const Text(
-                '°',
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.w900,
-                  color: FlinkColors.pink,
-                ),
-              ),
-              const Spacer(),
-              Container(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 10, vertical: 4),
-                decoration: BoxDecoration(
-                  color: FlinkColors.pink.withOpacity(0.10),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: const Text(
-                  '15 min',
-                  style: TextStyle(
-                    color: FlinkColors.pink,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w700,
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: const [
+              Row(
+                children: [
+                  Text(
+                    'Flink Cooks',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w900,
+                      color: FlinkColors.black,
+                      letterSpacing: -0.5,
+                    ),
                   ),
+                  Text(
+                    '°',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w900,
+                      color: FlinkColors.pink,
+                    ),
+                  ),
+                ],
+              ),
+              Text(
+                '15-minute meals, delivered to your door.',
+                style: TextStyle(
+                  fontSize: 12,
+                  color: FlinkColors.textGrey,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 4),
-          const Text(
-            '15-minute meals, delivered to your door.',
-            style: TextStyle(
-              fontSize: 14,
-              color: FlinkColors.textGrey,
+          const Spacer(),
+          Container(
+            padding: const EdgeInsets.symmetric(
+                horizontal: 10, vertical: 4),
+            decoration: BoxDecoration(
+              color: FlinkColors.pink.withOpacity(0.10),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: const Text(
+              '15 min',
+              style: TextStyle(
+                color: FlinkColors.pink,
+                fontSize: 11,
+                fontWeight: FontWeight.w700,
+              ),
             ),
           ),
         ],
@@ -115,7 +109,8 @@ class FlinkCooksScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildRecipeCard(BuildContext context, RecipeModel recipe) {
+  Widget _buildRecipeCard(
+      BuildContext context, RecipeModel recipe) {
     return GestureDetector(
       onTap: () {
         Navigator.of(context).push(
@@ -127,13 +122,14 @@ class FlinkCooksScreen extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           color: FlinkColors.white,
-          borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: FlinkColors.midGrey),
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(
+              color: FlinkColors.midGrey, width: 0.8),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
+              color: Colors.black.withOpacity(0.04),
+              blurRadius: 4,
+              offset: const Offset(0, 1),
             ),
           ],
         ),
@@ -141,90 +137,92 @@ class FlinkCooksScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            // Image
+            // Square image
             ClipRRect(
               borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(14),
-                topRight: Radius.circular(14),
+                topLeft: Radius.circular(10),
+                topRight: Radius.circular(10),
               ),
-              child: Image.network(
-                recipe.imageUrl,
-                height: 110,
-                width: double.infinity,
-                fit: BoxFit.cover,
-                errorBuilder: (_, __, ___) => Container(
-                  height: 110,
-                  color: FlinkColors.lightGrey,
-                  child: const Icon(Icons.restaurant,
-                      color: FlinkColors.textGrey, size: 36),
+              child: AspectRatio(
+                aspectRatio: 1.0,
+                child: Image.network(
+                  recipe.imageUrl,
+                  fit: BoxFit.cover,
+                  errorBuilder: (_, __, ___) => Container(
+                    color: FlinkColors.lightGrey,
+                    child: const Icon(
+                      Icons.restaurant,
+                      color: FlinkColors.textGrey,
+                      size: 28,
+                    ),
+                  ),
                 ),
               ),
             ),
-            // Card content
-            Padding(
-              padding: const EdgeInsets.all(10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 7, vertical: 2),
-                    decoration: BoxDecoration(
-                      color: FlinkColors.pink.withOpacity(0.08),
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    child: Text(
+
+            // Info below image
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(8, 6, 8, 8),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Category
+                    Text(
                       recipe.category,
                       style: const TextStyle(
-                        color: FlinkColors.pink,
+                        color: FlinkColors.textGrey,
                         fontSize: 10,
-                        fontWeight: FontWeight.w600,
                       ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                  ),
-                  const SizedBox(height: 5),
-                  Text(
-                    recipe.name,
-                    style: const TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w700,
-                      color: FlinkColors.black,
+                    const SizedBox(height: 3),
+                    // Recipe name — bigger font
+                    Text(
+                      recipe.name,
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w700,
+                        color: FlinkColors.black,
+                        height: 1.2,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(height: 6),
-                  Row(
-                    mainAxisAlignment:
-                        MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: const [
-                          Icon(Icons.access_time,
-                              size: 12,
-                              color: FlinkColors.textGrey),
-                          SizedBox(width: 3),
-                          Text(
-                            '15 min',
-                            style: TextStyle(
-                              fontSize: 11,
-                              color: FlinkColors.textGrey,
-                            ),
+                    const SizedBox(height: 6),
+                    // Price and + button
+                    Row(
+                      mainAxisAlignment:
+                          MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment:
+                          CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          '€${recipe.totalPrice.toStringAsFixed(2)}',
+                          style: const TextStyle(
+                            fontSize: 13,
+                            color: FlinkColors.black,
+                            fontWeight: FontWeight.w800,
                           ),
-                        ],
-                      ),
-                      Text(
-                        '€${recipe.totalPrice.toStringAsFixed(2)}',
-                        style: const TextStyle(
-                          fontSize: 12,
-                          color: FlinkColors.pink,
-                          fontWeight: FontWeight.w700,
                         ),
-                      ),
-                    ],
-                  ),
-                ],
+                        Container(
+                          width: 28,
+                          height: 28,
+                          decoration: const BoxDecoration(
+                            color: FlinkColors.pink,
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(
+                            Icons.add,
+                            color: FlinkColors.white,
+                            size: 18,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
           ],

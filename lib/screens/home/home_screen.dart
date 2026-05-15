@@ -3,6 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../../theme/app_theme.dart';
 import '../auth/login_screen.dart';
 import '../flinkcooks/flink_cooks_screen.dart';
+import '../cart/cart_screen.dart';
+import '../cart/cart_service.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -13,9 +15,43 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
+  final CartService _cartService = CartService();
+
+  @override
+  void initState() {
+    super.initState();
+    _cartService.addListener(_onCartChanged);
+  }
+
+  @override
+  void dispose() {
+    _cartService.removeListener(_onCartChanged);
+    super.dispose();
+  }
+
+  void _onCartChanged() {
+    setState(() {});
+  }
 
   Future<void> _signOut() async {
     await FirebaseAuth.instance.signOut();
+  }
+
+  Widget _buildScreen(int index) {
+    switch (index) {
+      case 0:
+        return const _ComingSoonScreen(label: 'Discover');
+      case 1:
+        return const _ComingSoonScreen(label: 'Offers');
+      case 2:
+        return const FlinkCooksScreen();
+      case 3:
+        return const CartScreen();
+      case 4:
+        return const _ComingSoonScreen(label: 'Profile');
+      default:
+        return const _ComingSoonScreen(label: 'Discover');
+    }
   }
 
   @override
@@ -26,16 +62,7 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           _buildTopBar(),
           Expanded(
-            child: IndexedStack(
-              index: _selectedIndex,
-              children: [
-                const _ComingSoonScreen(label: 'Discover'),
-                const _ComingSoonScreen(label: 'Offers'),
-                const FlinkCooksScreen(),
-                const _ComingSoonScreen(label: 'Cart'),
-                const _ComingSoonScreen(label: 'Profile'),
-              ],
-            ),
+            child: _buildScreen(_selectedIndex),
           ),
         ],
       ),
@@ -47,7 +74,8 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         child: BottomNavigationBar(
           currentIndex: _selectedIndex,
-          onTap: (index) => setState(() => _selectedIndex = index),
+          onTap: (index) =>
+              setState(() => _selectedIndex = index),
           type: BottomNavigationBarType.fixed,
           backgroundColor: FlinkColors.white,
           selectedItemColor: FlinkColors.pink,
@@ -58,28 +86,28 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           unselectedLabelStyle: const TextStyle(fontSize: 10),
           elevation: 0,
-          items: const [
-            BottomNavigationBarItem(
+          items: [
+            const BottomNavigationBarItem(
               icon: Icon(Icons.explore_outlined),
               activeIcon: Icon(Icons.explore),
               label: 'Discover',
             ),
-            BottomNavigationBarItem(
+            const BottomNavigationBarItem(
               icon: Icon(Icons.local_offer_outlined),
               activeIcon: Icon(Icons.local_offer),
               label: 'Offers',
             ),
-            BottomNavigationBarItem(
+            const BottomNavigationBarItem(
               icon: Icon(Icons.menu_book_outlined),
               activeIcon: Icon(Icons.menu_book),
               label: 'Flink Cooks°',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.shopping_cart_outlined),
-              activeIcon: Icon(Icons.shopping_cart),
+              icon: _buildCartIcon(isActive: false),
+              activeIcon: _buildCartIcon(isActive: true),
               label: 'Cart',
             ),
-            BottomNavigationBarItem(
+            const BottomNavigationBarItem(
               icon: Icon(Icons.person_outline),
               activeIcon: Icon(Icons.person),
               label: 'Profile',
@@ -90,13 +118,56 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  Widget _buildCartIcon({required bool isActive}) {
+    final count = _cartService.totalItemCount;
+    return Stack(
+      clipBehavior: Clip.none,
+      children: [
+        Icon(
+          isActive
+              ? Icons.shopping_cart
+              : Icons.shopping_cart_outlined,
+          color: isActive
+              ? FlinkColors.pink
+              : FlinkColors.textGrey,
+        ),
+        if (count > 0)
+          Positioned(
+            top: -6,
+            right: -8,
+            child: Container(
+              padding: const EdgeInsets.all(3),
+              decoration: const BoxDecoration(
+                color: FlinkColors.pink,
+                shape: BoxShape.circle,
+              ),
+              constraints: const BoxConstraints(
+                minWidth: 16,
+                minHeight: 16,
+              ),
+              child: Text(
+                count > 99 ? '99+' : '$count',
+                style: const TextStyle(
+                  color: FlinkColors.white,
+                  fontSize: 9,
+                  fontWeight: FontWeight.w800,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ),
+      ],
+    );
+  }
+
   Widget _buildTopBar() {
     final topPadding = MediaQuery.of(context).padding.top;
     return Container(
       decoration: BoxDecoration(
         color: FlinkColors.white,
         border: Border(
-          bottom: BorderSide(color: FlinkColors.midGrey, width: 0.8),
+          bottom: BorderSide(
+              color: FlinkColors.midGrey, width: 0.8),
         ),
       ),
       padding: EdgeInsets.only(
