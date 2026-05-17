@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:provider/provider.dart';
 import 'register_screen.dart';
 import '../../theme/app_theme.dart';
+import '../../providers/auth_provider.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -16,7 +18,6 @@ class _LoginScreenState extends State<LoginScreen> {
   final _passwordController = TextEditingController();
   bool _isLoading = false;
   bool _obscurePassword = true;
-  String? _errorMessage;
 
   @override
   void dispose() {
@@ -27,37 +28,13 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future<void> _login() async {
     if (!_formKey.currentState!.validate()) return;
-    setState(() {
-      _isLoading = true;
-      _errorMessage = null;
-    });
-    try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: _emailController.text.trim(),
-        password: _passwordController.text,
-      );
-    } on FirebaseAuthException catch (e) {
-      setState(() => _errorMessage = _mapError(e.code));
-    } finally {
-      if (mounted) setState(() => _isLoading = false);
-    }
-  }
-
-  String _mapError(String code) {
-    switch (code) {
-      case 'user-not-found':
-        return 'No account found with this email.';
-      case 'wrong-password':
-        return 'Incorrect password. Please try again.';
-      case 'invalid-credential':
-        return 'Email or password is incorrect.';
-      case 'invalid-email':
-        return 'Please enter a valid email address.';
-      case 'too-many-requests':
-        return 'Too many attempts. Please try again later.';
-      default:
-        return 'Sign in failed. Please try again.';
-    }
+    setState(() => _isLoading = true);
+    await context.read<FlinkcooksAuthProvider>().signIn(
+          _emailController.text,
+          _passwordController.text,
+        );
+    // GoRouter handles navigation automatically when auth state changes.
+    if (mounted) setState(() => _isLoading = false);
   }
 
   void _showForgotDialog() {
@@ -101,20 +78,20 @@ class _LoginScreenState extends State<LoginScreen> {
             onPressed: () async {
               final email = ctrl.text.trim();
               if (email.isNotEmpty) {
+                final nav = Navigator.of(ctx);
+                final messenger = ScaffoldMessenger.of(context);
                 try {
                   await FirebaseAuth.instance
                       .sendPasswordResetEmail(email: email);
-                  if (mounted) {
-                    Navigator.pop(ctx);
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('Reset link sent to $email'),
-                        backgroundColor: FlinkColors.pink,
-                      ),
-                    );
-                  }
+                  nav.pop();
+                  messenger.showSnackBar(
+                    SnackBar(
+                      content: Text('Reset link sent to $email'),
+                      backgroundColor: FlinkColors.pink,
+                    ),
+                  );
                 } catch (e) {
-                  if (mounted) Navigator.pop(ctx);
+                  nav.pop();
                 }
               }
             },
@@ -130,6 +107,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final auth = context.watch<FlinkcooksAuthProvider>();
+
     return Scaffold(
       backgroundColor: FlinkColors.white,
       body: SafeArea(
@@ -142,7 +121,6 @@ class _LoginScreenState extends State<LoginScreen> {
               children: [
                 const SizedBox(height: 48),
 
-                // Flink Logo
                 const FlinkLogo(),
 
                 const SizedBox(height: 40),
@@ -157,7 +135,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 const SizedBox(height: 6),
                 const Text(
-                  'Sign in to continue shopping.',
+                  'Sign in to continue.',
                   style: TextStyle(
                     fontSize: 15,
                     color: FlinkColors.textGrey,
@@ -166,16 +144,16 @@ class _LoginScreenState extends State<LoginScreen> {
 
                 const SizedBox(height: 32),
 
-                if (_errorMessage != null) ...[
+                if (auth.errorMessage != null) ...[
                   Container(
                     width: double.infinity,
                     padding: const EdgeInsets.symmetric(
                         horizontal: 14, vertical: 12),
                     decoration: BoxDecoration(
-                      color: FlinkColors.pink.withOpacity(0.08),
+                      color: FlinkColors.pink.withValues(alpha:0.08),
                       borderRadius: BorderRadius.circular(10),
                       border: Border.all(
-                          color: FlinkColors.pink.withOpacity(0.3)),
+                          color: FlinkColors.pink.withValues(alpha:0.3)),
                     ),
                     child: Row(
                       children: [
@@ -184,7 +162,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         const SizedBox(width: 8),
                         Expanded(
                           child: Text(
-                            _errorMessage!,
+                            auth.errorMessage!,
                             style: const TextStyle(
                               color: FlinkColors.pink,
                               fontSize: 13,
@@ -279,20 +257,17 @@ class _LoginScreenState extends State<LoginScreen> {
                 const Row(
                   children: [
                     Expanded(
-                        child:
-                            Divider(color: FlinkColors.midGrey)),
+                        child: Divider(color: FlinkColors.midGrey)),
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 12),
                       child: Text(
                         'or',
                         style: TextStyle(
-                            color: FlinkColors.textGrey,
-                            fontSize: 13),
+                            color: FlinkColors.textGrey, fontSize: 13),
                       ),
                     ),
                     Expanded(
-                        child:
-                            Divider(color: FlinkColors.midGrey)),
+                        child: Divider(color: FlinkColors.midGrey)),
                   ],
                 ),
 

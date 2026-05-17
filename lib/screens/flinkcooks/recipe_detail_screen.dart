@@ -1,4 +1,5 @@
 import '../cart/cart_service.dart';
+import '../cart/cart_screen.dart';
 import 'package:flutter/material.dart';
 import '../../theme/app_theme.dart';
 import 'recipes_data.dart';
@@ -40,33 +41,29 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
   }
 
   void _showAddedToCart() {
-  CartService().addRecipe(widget.recipe, _ingredients);
-  ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(
-      content: Row(
-        children: const [
-          Icon(Icons.check_circle,
-              color: FlinkColors.white, size: 20),
-          SizedBox(width: 10),
-          Text(
-            'Added to Cart!',
-            style: TextStyle(
-              color: FlinkColors.white,
-              fontWeight: FontWeight.w700,
+    CartService().addRecipe(widget.recipe, _ingredients);
+    ScaffoldMessenger.of(context).clearSnackBars();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: const Row(
+          children: [
+            Icon(Icons.check_circle, color: FlinkColors.white, size: 20),
+            SizedBox(width: 10),
+            Text(
+              'Added to Cart!',
+              style: TextStyle(
+                  color: FlinkColors.white, fontWeight: FontWeight.w700),
             ),
-          ),
-        ],
+          ],
+        ),
+        backgroundColor: FlinkColors.pink,
+        duration: const Duration(seconds: 2),
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        margin: const EdgeInsets.fromLTRB(16, 0, 16, 88),
       ),
-      backgroundColor: FlinkColors.pink,
-      duration: const Duration(seconds: 2),
-      behavior: SnackBarBehavior.floating,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
-      ),
-      margin: const EdgeInsets.fromLTRB(16, 0, 16, 80),
-    ),
-  );
-}
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -322,18 +319,17 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
             ),
           ),
 
-          // Fixed Add to Cart button
+          // Bottom action bar — Add to Cart + View Cart
           Positioned(
             bottom: 0,
             left: 0,
             right: 0,
             child: Container(
-              padding: const EdgeInsets.fromLTRB(16, 12, 16, 20),
+              padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
               decoration: BoxDecoration(
                 color: FlinkColors.white,
                 border: Border(
-                  top: BorderSide(
-                      color: FlinkColors.midGrey, width: 0.8),
+                  top: BorderSide(color: FlinkColors.midGrey, width: 0.8),
                 ),
                 boxShadow: [
                   BoxShadow(
@@ -343,46 +339,85 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                   ),
                 ],
               ),
-              child: ElevatedButton(
-                onPressed:
-                    _totalItems > 0 ? _showAddedToCart : null,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: FlinkColors.pink,
-                  disabledBackgroundColor: FlinkColors.midGrey,
-                  minimumSize: const Size(double.infinity, 52),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
+              child: Row(
+                children: [
+                  // ── Add to Cart ──
+                  Expanded(
+                    child: SizedBox(
+                      height: 52,
+                      child: ElevatedButton(
+                        onPressed: _totalItems > 0 ? _showAddedToCart : null,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: FlinkColors.pink,
+                          disabledBackgroundColor: FlinkColors.midGrey,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12)),
+                          padding: const EdgeInsets.symmetric(horizontal: 12),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              '$_totalItems items',
+                              style: const TextStyle(
+                                  color: FlinkColors.white,
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w600),
+                            ),
+                            const Text(
+                              'Add to Cart',
+                              style: TextStyle(
+                                  color: FlinkColors.white,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w800),
+                            ),
+                            Text(
+                              '€${_totalPrice.toStringAsFixed(2)}',
+                              style: const TextStyle(
+                                  color: FlinkColors.white,
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w600),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                   ),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      '$_totalItems items',
-                      style: const TextStyle(
-                        color: FlinkColors.white,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
+                  const SizedBox(width: 10),
+                  // ── View Cart ──
+                  SizedBox(
+                    height: 52,
+                    child: ElevatedButton(
+                      onPressed: () => Navigator.of(context).push(
+                        MaterialPageRoute(
+                            builder: (_) => const CartScreen()),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: FlinkColors.black,
+                        minimumSize: Size.zero,
+                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12)),
+                        padding: const EdgeInsets.symmetric(horizontal: 14),
+                      ),
+                      child: const Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.shopping_cart_outlined,
+                              color: FlinkColors.white, size: 18),
+                          SizedBox(height: 2),
+                          Text(
+                            'View Cart',
+                            style: TextStyle(
+                                color: FlinkColors.white,
+                                fontSize: 11,
+                                fontWeight: FontWeight.w700),
+                          ),
+                        ],
                       ),
                     ),
-                    const Text(
-                      'Add to Cart',
-                      style: TextStyle(
-                        color: FlinkColors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w800,
-                      ),
-                    ),
-                    Text(
-                      '€${_totalPrice.toStringAsFixed(2)}',
-                      style: const TextStyle(
-                        color: FlinkColors.white,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           ),

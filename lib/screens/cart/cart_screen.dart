@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../theme/app_theme.dart';
 import 'cart_service.dart';
+import '../payment/payment_screen.dart';
 
 class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
@@ -150,7 +151,9 @@ class _CartScreenState extends State<CartScreen> {
               ],
             ),
             child: ElevatedButton(
-              onPressed: () => _showPaymentSuccess(),
+              onPressed: () => Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => const PaymentScreen()),
+              ),
               style: ElevatedButton.styleFrom(
                 backgroundColor: FlinkColors.pink,
                 minimumSize: const Size(double.infinity, 52),
@@ -469,72 +472,4 @@ class _CartScreenState extends State<CartScreen> {
     );
   }
 
-  void _showPaymentSuccess() {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (ctx) => AlertDialog(
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16)),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: 80,
-              height: 80,
-              decoration: BoxDecoration(
-                color: Colors.green.withOpacity(0.1),
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(
-                Icons.check_circle,
-                color: Colors.green,
-                size: 50,
-              ),
-            ),
-            const SizedBox(height: 16),
-            const Text(
-              'Order Received!',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w900,
-                color: FlinkColors.black,
-              ),
-            ),
-            const SizedBox(height: 8),
-            const Text(
-              'Your ingredients are being picked.',
-              style: TextStyle(
-                fontSize: 14,
-                color: FlinkColors.textGrey,
-              ),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 4),
-            const Text(
-              'Arriving at your Berlin address in 10 minutes.',
-              style: TextStyle(
-                fontSize: 13,
-                color: FlinkColors.textGrey,
-              ),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pop(ctx);
-                setState(() {
-                  _cartService.clear();
-                });
-              },
-              style: ElevatedButton.styleFrom(
-                minimumSize: const Size(double.infinity, 46),
-              ),
-              child: const Text('Back to Home'),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 }
