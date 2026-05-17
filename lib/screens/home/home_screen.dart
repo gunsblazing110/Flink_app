@@ -30,7 +30,14 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _onCartChanged() {
-    setState(() {});
+    if (mounted) {
+      if (_cartService.shouldResetTab) {
+        _cartService.shouldResetTab = false;
+        setState(() => _selectedIndex = 0);
+      } else {
+        setState(() {});
+      }
+    }
   }
 
   Future<void> _signOut() async {
@@ -46,7 +53,7 @@ class _HomeScreenState extends State<HomeScreen> {
       case 2:
         return const FlinkCooksScreen();
       case 3:
-        return const CartScreen();
+        return CartScreen();
       case 4:
         return const _ComingSoonScreen(label: 'Profile');
       default:

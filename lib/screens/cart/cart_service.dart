@@ -33,9 +33,9 @@ class CartService extends ChangeNotifier {
   CartService._internal();
 
   final List<CartItem> _items = [];
+  bool shouldResetTab = false;
 
   List<CartItem> get items => List.unmodifiable(_items);
-
   bool get isEmpty => _items.isEmpty;
 
   double get subtotal {
@@ -47,7 +47,6 @@ class CartService extends ChangeNotifier {
   }
 
   double get deliveryFee => 1.80;
-
   double get grandTotal => subtotal + deliveryFee;
 
   int get totalItemCount {
@@ -73,6 +72,7 @@ class CartService extends ChangeNotifier {
 
   void clear() {
     _items.clear();
+    shouldResetTab = true;
     notifyListeners();
   }
 }

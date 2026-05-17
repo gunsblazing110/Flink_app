@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../cart/cart_service.dart';
 import '../../theme/app_theme.dart';
-import 'order_success_screen.dart';
+import 'package:go_router/go_router.dart';
 
 class PaymentScreen extends StatefulWidget {
   const PaymentScreen({super.key});
@@ -30,14 +30,12 @@ class _PaymentScreenState extends State<PaymentScreen> {
   }
 
   Future<void> _confirmPay() async {
-    if (_selectedMethod == 0 && !_formKey.currentState!.validate()) return;
-    setState(() => _paying = true);
-    await Future.delayed(const Duration(milliseconds: 900));
-    if (!mounted) return;
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (_) => const OrderSuccessScreen()),
-    );
-  }
+  if (_selectedMethod == 0 && !_formKey.currentState!.validate()) return;
+  setState(() => _paying = true);
+  await Future.delayed(const Duration(milliseconds: 900));
+  if (!mounted) return;
+  context.pushReplacement('/order-success');
+}
 
   @override
   Widget build(BuildContext context) {

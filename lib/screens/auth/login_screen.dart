@@ -33,7 +33,6 @@ class _LoginScreenState extends State<LoginScreen> {
           _emailController.text,
           _passwordController.text,
         );
-    // GoRouter handles navigation automatically when auth state changes.
     if (mounted) setState(() => _isLoading = false);
   }
 
@@ -53,8 +52,8 @@ class _LoginScreenState extends State<LoginScreen> {
           children: [
             const Text(
               "We'll send a reset link to your email.",
-              style:
-                  TextStyle(color: FlinkColors.textGrey, fontSize: 13),
+              style: TextStyle(
+                  color: FlinkColors.textGrey, fontSize: 13),
             ),
             const SizedBox(height: 16),
             TextField(
@@ -150,10 +149,11 @@ class _LoginScreenState extends State<LoginScreen> {
                     padding: const EdgeInsets.symmetric(
                         horizontal: 14, vertical: 12),
                     decoration: BoxDecoration(
-                      color: FlinkColors.pink.withValues(alpha:0.08),
+                      color: FlinkColors.pink.withValues(alpha: 0.08),
                       borderRadius: BorderRadius.circular(10),
                       border: Border.all(
-                          color: FlinkColors.pink.withValues(alpha:0.3)),
+                          color:
+                              FlinkColors.pink.withValues(alpha: 0.3)),
                     ),
                     child: Row(
                       children: [
@@ -176,10 +176,12 @@ class _LoginScreenState extends State<LoginScreen> {
                   const SizedBox(height: 16),
                 ],
 
+                // Email field — moves focus to password on Enter
                 TextFormField(
                   controller: _emailController,
                   keyboardType: TextInputType.emailAddress,
                   autocorrect: false,
+                  textInputAction: TextInputAction.next,
                   decoration: const InputDecoration(
                     labelText: 'Email address',
                     prefixIcon: Icon(Icons.email_outlined,
@@ -195,9 +197,12 @@ class _LoginScreenState extends State<LoginScreen> {
 
                 const SizedBox(height: 14),
 
+                // Password field — submits form on Enter
                 TextFormField(
                   controller: _passwordController,
                   obscureText: _obscurePassword,
+                  textInputAction: TextInputAction.done,
+                  onFieldSubmitted: (_) => _isLoading ? null : _login(),
                   decoration: InputDecoration(
                     labelText: 'Password',
                     prefixIcon: const Icon(Icons.lock_outline,
@@ -263,7 +268,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: Text(
                         'or',
                         style: TextStyle(
-                            color: FlinkColors.textGrey, fontSize: 13),
+                            color: FlinkColors.textGrey,
+                            fontSize: 13),
                       ),
                     ),
                     Expanded(
@@ -306,7 +312,6 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 }
 
-// Flink Logo — used on auth screens and anywhere else needed
 class FlinkLogo extends StatelessWidget {
   const FlinkLogo({super.key});
 

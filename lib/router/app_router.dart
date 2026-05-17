@@ -8,6 +8,8 @@ import '../screens/unauthorized_screen.dart';
 import '../screens/hq_admin/recipe_management_page.dart';
 import '../screens/hub_manager/hub_inventory_page.dart';
 import '../screens/home/home_screen.dart';
+import '../screens/payment/payment_screen.dart';
+import '../screens/payment/order_success_screen.dart';
 
 class AppRouter {
   static GoRouter create(FlinkcooksAuthProvider auth) {
@@ -27,21 +29,26 @@ class AppRouter {
               : '/login';
         }
 
-        // Regular customers (no staff role) go to the customer home screen.
-        // They cannot access /admin or /hub routes — the checks below redirect
-        // any staff-only path back to /home for them.
         if (role == UserRole.unknown) {
-          if (location.startsWith('/admin') || location.startsWith('/hub')) {
+          if (location.startsWith('/admin') ||
+              location.startsWith('/hub')) {
             return '/home';
+          }
+          if (location == '/payment' ||
+              location == '/order-success') {
+            return null;
           }
           return location == '/home' ? null : '/home';
         }
 
         if (location == '/login' || location == '/register') {
-          return role == UserRole.hqAdmin ? '/admin/recipes' : '/hub/inventory';
+          return role == UserRole.hqAdmin
+              ? '/admin/recipes'
+              : '/hub/inventory';
         }
 
-        if (role == UserRole.hubManager && location.startsWith('/admin')) {
+        if (role == UserRole.hubManager &&
+            location.startsWith('/admin')) {
           return '/unauthorized';
         }
 
@@ -71,6 +78,14 @@ class AppRouter {
         GoRoute(
           path: '/home',
           builder: (ctx, st) => const HomeScreen(),
+        ),
+        GoRoute(
+          path: '/payment',
+          builder: (ctx, st) => const PaymentScreen(),
+        ),
+        GoRoute(
+          path: '/order-success',
+          builder: (ctx, st) => const OrderSuccessScreen(),
         ),
       ],
     );

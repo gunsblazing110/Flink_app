@@ -14,18 +14,15 @@ class OrderSuccessScreen extends StatefulWidget {
 class _OrderSuccessScreenState extends State<OrderSuccessScreen>
     with SingleTickerProviderStateMixin {
   late final AnimationController _entryCtrl;
-
   late final Animation<double> _checkScale;
   late final Animation<double> _titleFade;
   late final Animation<Offset> _detailsSlide;
   late final Animation<double> _detailsFade;
-
   late final String _orderNumber;
 
   @override
   void initState() {
     super.initState();
-
     _orderNumber =
         '#FL-${20000 + DateTime.now().millisecondsSinceEpoch % 9999}';
 
@@ -89,18 +86,20 @@ class _OrderSuccessScreenState extends State<OrderSuccessScreen>
                           color: Colors.green.shade50,
                           shape: BoxShape.circle,
                           border: Border.all(
-                              color: Colors.green.shade300, width: 2.5),
+                              color: Colors.green.shade300,
+                              width: 2.5),
                         ),
                         child: Icon(Icons.check_rounded,
-                            color: Colors.green.shade500, size: 48),
+                            color: Colors.green.shade500,
+                            size: 48),
                       ),
                     ),
                     const SizedBox(height: 14),
                     FadeTransition(
                       opacity: _titleFade,
-                      child: Column(
+                      child: const Column(
                         children: [
-                          const Text(
+                          Text(
                             'Order Placed!',
                             style: TextStyle(
                               fontSize: 26,
@@ -108,11 +107,12 @@ class _OrderSuccessScreenState extends State<OrderSuccessScreen>
                               color: FlinkColors.black,
                             ),
                           ),
-                          const SizedBox(height: 6),
-                          const Text(
+                          SizedBox(height: 6),
+                          Text(
                             'Your ingredients are being picked',
                             style: TextStyle(
-                                fontSize: 14, color: FlinkColors.textGrey),
+                                fontSize: 14,
+                                color: FlinkColors.textGrey),
                           ),
                         ],
                       ),
@@ -122,7 +122,8 @@ class _OrderSuccessScreenState extends State<OrderSuccessScreen>
                       position: _detailsSlide,
                       child: FadeTransition(
                         opacity: _detailsFade,
-                        child: _OrderDetailsCard(orderNumber: _orderNumber),
+                        child: _OrderDetailsCard(
+                            orderNumber: _orderNumber),
                       ),
                     ),
                   ],
@@ -134,9 +135,7 @@ class _OrderSuccessScreenState extends State<OrderSuccessScreen>
               child: ElevatedButton(
                 onPressed: () {
                   CartService().clear();
-                  // Pop everything off the imperative Navigator stack back to
-                  // the GoRouter root (HomeScreen), which is already at /home.
-                  Navigator.of(context).popUntil((route) => route.isFirst);
+                  context.go('/home');
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: FlinkColors.pink,
@@ -160,8 +159,6 @@ class _OrderSuccessScreenState extends State<OrderSuccessScreen>
   }
 }
 
-// ── Order Details Card ──────────────────────────────────────────────────────
-
 class _OrderDetailsCard extends StatelessWidget {
   final String orderNumber;
   const _OrderDetailsCard({required this.orderNumber});
@@ -177,14 +174,20 @@ class _OrderDetailsCard extends StatelessWidget {
       ),
       child: Column(
         children: [
-          _Row(icon: Icons.confirmation_number_outlined,
-              label: 'Order number', value: orderNumber),
+          _Row(
+              icon: Icons.confirmation_number_outlined,
+              label: 'Order number',
+              value: orderNumber),
           const _Divider(),
-          _Row(icon: Icons.access_time_rounded,
-              label: 'Estimated arrival', value: '10 minutes'),
+          _Row(
+              icon: Icons.access_time_rounded,
+              label: 'Estimated arrival',
+              value: '10 minutes'),
           const _Divider(),
-          _Row(icon: Icons.location_on_outlined,
-              label: 'Delivering to', value: 'Berlin, Germany'),
+          _Row(
+              icon: Icons.location_on_outlined,
+              label: 'Delivering to',
+              value: 'Berlin, Germany'),
         ],
       ),
     );
@@ -194,16 +197,19 @@ class _OrderDetailsCard extends StatelessWidget {
 class _Divider extends StatelessWidget {
   const _Divider();
   @override
-  Widget build(BuildContext context) =>
-      const Padding(padding: EdgeInsets.symmetric(vertical: 10),
-          child: Divider(height: 1, color: FlinkColors.midGrey));
+  Widget build(BuildContext context) => const Padding(
+      padding: EdgeInsets.symmetric(vertical: 10),
+      child: Divider(height: 1, color: FlinkColors.midGrey));
 }
 
 class _Row extends StatelessWidget {
   final IconData icon;
   final String label;
   final String value;
-  const _Row({required this.icon, required this.label, required this.value});
+  const _Row(
+      {required this.icon,
+      required this.label,
+      required this.value});
 
   @override
   Widget build(BuildContext context) {
@@ -225,7 +231,8 @@ class _Row extends StatelessWidget {
             children: [
               Text(label,
                   style: const TextStyle(
-                      fontSize: 11, color: FlinkColors.textGrey)),
+                      fontSize: 11,
+                      color: FlinkColors.textGrey)),
               Text(value,
                   style: const TextStyle(
                       fontSize: 14,
@@ -238,8 +245,6 @@ class _Row extends StatelessWidget {
     );
   }
 }
-
-// ── Lottie Delivery Animation ─────────────────────────────────────────────────
 
 class _LottieDelivery extends StatelessWidget {
   const _LottieDelivery();
@@ -260,10 +265,15 @@ class _LottieDelivery extends StatelessWidget {
           child: const Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.delivery_dining, color: FlinkColors.pink, size: 64),
+              Icon(Icons.delivery_dining,
+                  color: FlinkColors.pink, size: 64),
               SizedBox(height: 8),
-              Text('Drop delivery.json in assets/animations/',
-                  style: TextStyle(color: FlinkColors.textGrey, fontSize: 12)),
+              Text(
+                'Drop delivery.json in assets/animations/',
+                style: TextStyle(
+                    color: FlinkColors.textGrey,
+                    fontSize: 12),
+              ),
             ],
           ),
         ),

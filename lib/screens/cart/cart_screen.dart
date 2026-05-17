@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import '../../theme/app_theme.dart';
 import 'cart_service.dart';
-import '../payment/payment_screen.dart';
 
 class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
@@ -127,15 +127,12 @@ class _CartScreenState extends State<CartScreen> {
             _buildSummaryCard(),
           ],
         ),
-
-        // Fixed proceed to payment button
         Positioned(
           bottom: 0,
           left: 0,
           right: 0,
           child: Container(
-            padding:
-                const EdgeInsets.fromLTRB(16, 12, 16, 20),
+            padding: const EdgeInsets.fromLTRB(16, 12, 16, 20),
             decoration: BoxDecoration(
               color: FlinkColors.white,
               border: Border(
@@ -151,9 +148,7 @@ class _CartScreenState extends State<CartScreen> {
               ],
             ),
             child: ElevatedButton(
-              onPressed: () => Navigator.of(context).push(
-                MaterialPageRoute(builder: (_) => const PaymentScreen()),
-              ),
+              onPressed: () => context.push('/payment'),
               style: ElevatedButton.styleFrom(
                 backgroundColor: FlinkColors.pink,
                 minimumSize: const Size(double.infinity, 52),
@@ -209,7 +204,6 @@ class _CartScreenState extends State<CartScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Recipe header
           Padding(
             padding: const EdgeInsets.all(12),
             child: Row(
@@ -271,16 +265,11 @@ class _CartScreenState extends State<CartScreen> {
               ],
             ),
           ),
-
           const Divider(
               height: 1, color: FlinkColors.midGrey),
-
-          // Ingredient rows
           ...item.selectedIngredients
               .map((ingredient) =>
                   _buildIngredientRow(ingredient)),
-
-          // Recipe subtotal
           Padding(
             padding:
                 const EdgeInsets.fromLTRB(12, 10, 12, 12),
@@ -392,12 +381,10 @@ class _CartScreenState extends State<CartScreen> {
             mainAxisAlignment:
                 MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                'Subtotal',
-                style: TextStyle(
-                    color: FlinkColors.textGrey,
-                    fontSize: 14),
-              ),
+              const Text('Subtotal',
+                  style: TextStyle(
+                      color: FlinkColors.textGrey,
+                      fontSize: 14)),
               Text(
                 '€${_cartService.subtotal.toStringAsFixed(2)}',
                 style: const TextStyle(
@@ -412,12 +399,10 @@ class _CartScreenState extends State<CartScreen> {
             mainAxisAlignment:
                 MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                'Delivery fee',
-                style: TextStyle(
-                    color: FlinkColors.textGrey,
-                    fontSize: 14),
-              ),
+              const Text('Delivery fee',
+                  style: TextStyle(
+                      color: FlinkColors.textGrey,
+                      fontSize: 14)),
               Text(
                 '€${_cartService.deliveryFee.toStringAsFixed(2)}',
                 style: const TextStyle(
@@ -471,5 +456,4 @@ class _CartScreenState extends State<CartScreen> {
       ),
     );
   }
-
 }
