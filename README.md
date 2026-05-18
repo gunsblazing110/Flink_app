@@ -66,6 +66,9 @@ This feature directly supports Flink's Supply Chain Management by increasing ave
 | Lottie | Delivery animation on order success screen |
 | Netlify | Web deployment |
 
+---
+
+## Project Structure
 lib/
 ├── firebase_options.dart
 ├── main.dart
@@ -214,5 +217,3 @@ Built as part of an App Programming course at SRH University, Berlin.
 
 This is a student demo project and is not affiliated with or endorsed by Flink GmbH. All Flink branding is used purely for educational demonstration purposes.
 ---
-
-## Project Structure
