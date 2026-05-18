@@ -13,7 +13,6 @@ A university project proposing and demonstrating a new **Flink Cooks°** feature
 
 🌐 https://flinkcooks.netlify.app/#/home 
 
-> Replace the link above with your actual Netlify URL
 
 ---
 
