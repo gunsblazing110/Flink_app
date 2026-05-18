@@ -4,12 +4,18 @@ import 'recipe_detail_screen.dart';
 import 'recipes_data.dart';
 
 class FlinkCooksScreen extends StatelessWidget {
-  final VoidCallback? onCartUpdated;
-  const FlinkCooksScreen({super.key, this.onCartUpdated});
-  
+  const FlinkCooksScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     final recipes = RecipesData.all;
+    final screenWidth = MediaQuery.of(context).size.width;
+
+    // Automatically pick the right ratio based on screen width
+    // Mobile is typically under 600px, web/desktop is wider
+    final isWeb = screenWidth > 600;
+    final aspectRatio = isWeb ? 0.72 : 0.62;
+    final crossAxisCount = isWeb ? 4 : 3;
 
     return Scaffold(
       backgroundColor: FlinkColors.white,
@@ -22,11 +28,11 @@ class FlinkCooksScreen extends StatelessWidget {
               child: GridView.builder(
                 padding: const EdgeInsets.all(12),
                 gridDelegate:
-                    const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 4,
+                    SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: crossAxisCount,
                   crossAxisSpacing: 8,
                   mainAxisSpacing: 8,
-                  childAspectRatio: 0.80,
+                  childAspectRatio: aspectRatio,
                 ),
                 itemCount: recipes.length,
                 itemBuilder: (context, index) {
@@ -161,68 +167,64 @@ class FlinkCooksScreen extends StatelessWidget {
             ),
 
             // Info below image
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(8, 6, 8, 8),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Category
-                    Text(
-                      recipe.category,
-                      style: const TextStyle(
-                        color: FlinkColors.textGrey,
-                        fontSize: 10,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
+            Padding(
+              padding: const EdgeInsets.fromLTRB(6, 5, 6, 6),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    recipe.category,
+                    style: const TextStyle(
+                      color: FlinkColors.textGrey,
+                      fontSize: 9,
                     ),
-                    const SizedBox(height: 3),
-                    // Recipe name — bigger font
-                    Text(
-                      recipe.name,
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w700,
-                        color: FlinkColors.black,
-                        height: 1.2,
-                      ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    recipe.name,
+                    style: const TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w700,
+                      color: FlinkColors.black,
+                      height: 1.2,
                     ),
-                    const SizedBox(height: 6),
-                    // Price and + button
-                    Row(
-                      mainAxisAlignment:
-                          MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment:
-                          CrossAxisAlignment.center,
-                      children: [
-                        Text(
-                          '€${recipe.totalPrice.toStringAsFixed(2)}',
-                          style: const TextStyle(
-                            fontSize: 13,
-                            color: FlinkColors.black,
-                            fontWeight: FontWeight.w800,
-                          ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 4),
+                  Row(
+                    mainAxisAlignment:
+                        MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment:
+                        CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        '€${recipe.totalPrice.toStringAsFixed(2)}',
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: FlinkColors.black,
+                          fontWeight: FontWeight.w800,
                         ),
-                        Container(
-                          width: 28,
-                          height: 28,
-                          decoration: const BoxDecoration(
-                            color: FlinkColors.pink,
-                            shape: BoxShape.circle,
-                          ),
-                          child: const Icon(
-                            Icons.add,
-                            color: FlinkColors.white,
-                            size: 18,
-                          ),
+                      ),
+                      Container(
+                        width: 24,
+                        height: 24,
+                        decoration: const BoxDecoration(
+                          color: FlinkColors.pink,
+                          shape: BoxShape.circle,
                         ),
-                      ],
-                    ),
-                  ],
-                ),
+                        child: const Icon(
+                          Icons.add,
+                          color: FlinkColors.white,
+                          size: 16,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
           ],

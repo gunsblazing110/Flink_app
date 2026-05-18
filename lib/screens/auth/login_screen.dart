@@ -176,7 +176,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   const SizedBox(height: 16),
                 ],
 
-                // Email field — moves focus to password on Enter
                 TextFormField(
                   controller: _emailController,
                   keyboardType: TextInputType.emailAddress,
@@ -197,7 +196,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
                 const SizedBox(height: 14),
 
-                // Password field — submits form on Enter
                 TextFormField(
                   controller: _passwordController,
                   obscureText: _obscurePassword,

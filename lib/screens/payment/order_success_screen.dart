@@ -135,6 +135,7 @@ class _OrderSuccessScreenState extends State<OrderSuccessScreen>
               child: ElevatedButton(
                 onPressed: () {
                   CartService().clear();
+                  Navigator.of(context).popUntil((route) => route.isFirst);
                   context.go('/home');
                 },
                 style: ElevatedButton.styleFrom(
