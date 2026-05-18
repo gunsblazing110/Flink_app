@@ -202,8 +202,11 @@ dependencies:
 ---
 
 ## Team
+1. Ram Sri Karan Mylavarapu
+2. Rajvardhan Anil Delekar
+3. Stacia D'Silva Agusta
 
-Built as part of an App Programming course at university.
+Built as part of an App Programming course at SRH University, Berlin.
 
 ---
 
